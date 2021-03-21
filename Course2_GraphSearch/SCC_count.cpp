@@ -37,15 +37,14 @@ void DFSSecond(Graph &graph, vector<bool> &exp,
 
 
 int main(int argc, char *argv[]){
-    string path = "H:\\GoogleDrive\\Career\\AlgorithmCourse\\AllCode\\GraphSearch\\Week1\\";
+    string path = ".";
 	string filename;
     if (argc>1){
     filename = argv[1];
-    }else{
-    // filename = "TestCase5.txt";    
+    }else{ 
     filename = "SCC.txt";
     }
-	string Name = path + filename; // absolute path
+	string Name = path + filename; // relative path
     Graph graph;
 
 

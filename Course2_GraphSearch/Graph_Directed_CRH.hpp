@@ -5,15 +5,7 @@
 #include <fstream>
 #include <vector>
 using namespace std;
-/* May have to consult online
-https://www.softwaretestinghelp.com/graph-implementation-cpp/
 
-To learn some basics
-https://www.tutorialspoint.com/cplusplus/cpp_pointers.htm
-
-I created this based on the following
-https://www.techiedelight.com/graph-implementation-using-stl/
-*/
 // Data tructure to store a graph edge
 struct Edge 
 { 
