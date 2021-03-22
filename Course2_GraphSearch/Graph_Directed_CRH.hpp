@@ -7,6 +7,7 @@
 using namespace std;
 
 // Data tructure to store a graph edge
+// specially made for Kosaraju's algorithm, supports inverse edges
 struct Edge 
 { 
 	int src;

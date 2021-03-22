@@ -1,7 +1,8 @@
 #include "Graph_Directed_CRH.hpp"
 #include <algorithm>    // std::sort
 // this version works for the test cases, but will not run for the big case
-// test cases, good up to 60 80000
+// test cases, good up to test case 60 with 80000 vertex
+// it suffers from memory iseue 
 
 int ft = 0;
 int s_leader = 0;
@@ -52,11 +53,13 @@ int main(int argc, char *argv[]){
     if (graph.V<100){
     printGraph(graph);
     } 
+
+    // main part of Kosaraju's algorithm
     vector<bool> exp(graph.V,false);
     vector<int> ftall(graph.V,0);
     vector<int> leader(graph.V,0);
 
-    // This set up has overflow
+    
     // first round inverse map reverse, get all the finish time
     for(int i =graph.V-1;i>-1;i--){
         // iterative DFS
@@ -66,7 +69,7 @@ int main(int argc, char *argv[]){
         }
     }
 
-    // ft has updated 
+    // ft has updated second DFS according to the ft (hightest first) 
     vector<bool> exp2(graph.V,false);
     vector<int> scc_size;
     scc_size.clear();
@@ -80,6 +83,7 @@ int main(int argc, char *argv[]){
             scc_size.push_back(scc_size_count);
         }
     }
+
     // all those belongs to the same leader gives one SCC
     // count the leader occurrence
     
