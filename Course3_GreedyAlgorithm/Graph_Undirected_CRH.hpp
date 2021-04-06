@@ -174,7 +174,10 @@ void loadGraphFromEdgestxt(string Name, Graph &graph)
 		    adj.resize(v);
             value.resize(v);
             graph.V = v;
-            iss >> e;
+            // assuming adding for cluster 
+            e = v*(v-1)/2;
+
+            // iss >> e;
             graph.E = e;
             graph.edges.resize(e);
             continue;
