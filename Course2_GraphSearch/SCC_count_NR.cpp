@@ -1,9 +1,7 @@
 #include "Graph_Directed_CRH.hpp"
 #include <algorithm>    // std::sort
 #include <stack>
-// This program is correct as it gives the correct answer on Mac.
-// Still haven't resolve the memory issue on Windows
-//
+
 // see the following example for how iterative approach was implemented with the finishing time 
 // calculation. 
 // https://weiming-hu.github.io/strongly-connected-components/
@@ -12,14 +10,6 @@
 // see the following for how a typical DFS is implemented
 // https://www.geeksforgeeks.org/iterative-depth-first-traversal/
 
-// For BFS implementation
-// https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/
-
-// somebody's python solution with answer, which is the same with my answer too.
-// 434821,968,459,313,211
-// https://github.com/rvarun7777/Graph-Search--Shortest-Paths--and-Data-Structures/blob/master/PA%201/scc_finder.py
-// tested with https://github.com/beaunus/stanford-algs
-// test cases, found issue with this method, the other one seems to be fine
 
 
 struct SCC {
