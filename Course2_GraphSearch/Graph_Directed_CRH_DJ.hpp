@@ -5,15 +5,14 @@
 #include <fstream>
 #include <vector>
 using namespace std;
-/* 
-I created this based on the following
-https://www.techiedelight.com/graph-implementation-using-stl/
-*/
+/* */
 // Data tructure to store a graph edge
+// add a value to each edge
 struct Edge 
 { 
 	int src;
     int dest; 
+    int value;
 }; 
 
 class Graph{
@@ -31,7 +30,7 @@ class Graph{
     // destructor
     ~Graph(void);
     // Add Edge used when creating graph
-    void AddEdge(int src, int dest);
+    void AddEdge(int src, int dest, int value);
     // 
     void AddEdge2(Edge one_edge);
 
@@ -45,8 +44,8 @@ class Graph{
 
     // adjacent list
     vector<vector<int>> adjList;
-    // adjacent list inverse, for SCC calculation
-    vector<vector<int>> adjListInv;
+    // adjacent list corresponding value
+    vector<vector<int>> valueList;
     // store all the edges, in case one want to use the list
 	vector<Edge> edges; 
     
@@ -82,6 +81,7 @@ Graph::Graph(int v, vector<Edge> const &edgesInput)
         {
             // insert at the end
             adjList[edgesInput[i].src].push_back(edgesInput[i].dest);
+            valueList[edgesInput[i].src].push_back(edgesInput[i].value);
         } 
         // for (auto &edgesInput: edgesInput)
         // {
@@ -104,16 +104,18 @@ Graph::~Graph(void)
 void Graph::AddVertex(){
 	V++;
 	adjList.push_back({});
+    valueList.push_back({});
 }
 
-void Graph::AddEdge(int src, int dest){
+void Graph::AddEdge(int src, int dest, int value){
 	E++;
 	Edge e;
     e.src = src;
 	e.dest = dest;
+    e.value = value;
 	edges.push_back(e);
 	adjList[src].push_back(dest);
-
+    valueList[src].push_back(value);
 	#ifdef UNDIRECTED
 	// uncomment the following code for undirected graph
 	adjList[dest].push_back(src);
@@ -125,6 +127,7 @@ void Graph::AddEdge2(Edge one_edge){
 	E++;
 	edges.push_back(one_edge);
 	adjList[one_edge.src].push_back(one_edge.dest);
+    adjList[one_edge.src].push_back(one_edge.value);
 }
 
 
@@ -138,17 +141,18 @@ void printGraph(Graph const &graph)
         cout << i << " ——> ";
         #endif
         // print all neighboring vertices of a vertex `i`
-        for (int v: graph.adjList[i]) {
-            cout << v << " ";
+        for (int j=0;j<graph.adjList[i].size();j++) {
+            cout << graph.adjList[i][j]  << ","  << graph.valueList[i][j] << " ";
         }
         cout << endl;
     }
 }
 
 void loadtxt2Graph(string Name, Graph &graph)
-{
+{   // this is to add for a weighted graph
     // read the adjlist first
     vector<vector<int>> adj;
+    vector<vector<int>> value;
     ifstream File;
     File.open(Name); 
     string line;
@@ -161,29 +165,40 @@ if (File.is_open()){
         
         iss >> v; // vertex number
 		adj.resize(v);
+        value.resize(v);
         v = v-1;
+        // from now on show be double
+        bool flag = true;
         while(iss >> x)
-        { 
-          adj[v].push_back(x-1);
+        {   
+            if (flag) {
+                adj[v].push_back(x-1);
+                flag = false;
+            }else{
+                value[v].push_back(x);
+                flag = true;
+            }
+          if (iss.peek() == ',') iss.ignore(); 
         }
 	n = n + adj[v].size();
 	#ifdef PRINT	
     cout << adj[v].size() << " edges for vertex " << v << endl;
 	#endif
-    }
+     }
     cout << "total vertex " << v+1 << endl; 
     cout << "total edge " << n/2 << endl; 
 
-    File.close();
+     File.close();
     
-    }else{
-        cout << "cannot open file" << endl;
+     }else{
+         cout << "cannot open file" << endl;
 		
-    }
+     }
     graph.V = v+1;
 	graph.E = n/2; 
 	graph.edges.resize(n/2);
     graph.adjList = adj;
+    graph.valueList = value;
     // convert to graph structure
 	int i = 0;
 	int j = 0; 
@@ -194,7 +209,8 @@ if (File.is_open()){
 			// src <dest 
 			if(adj[i][j]>i){
 			graph.edges[k].src = i; 
-	        graph.edges[k].dest = adj[i][j];    
+	        graph.edges[k].dest = adj[i][j];  
+            graph.edges[k].value = value[i][j];  
 			k++;	
 			}
 		}
@@ -202,45 +218,3 @@ if (File.is_open()){
 	cout << "evaluated edge: " << k << endl;
 };
 
-void loadtxtedge2Grap(string Name, Graph &graph)
-{
-    // read the edge
-    int v = 0;
-    ifstream File;
-    File.open(Name); 
-    string line;
-    int src;
-    int dest;
-    Edge edge;
-if (File.is_open()){
-    while(getline(File,line) ){
-        istringstream iss(line);   
-        iss >> src; // src
-		iss >> dest;
-        v=max(v,src);
-        v=max(v,dest);
-        edge.src = src-1;
-        edge.dest = dest-1;
-        graph.edges.push_back(edge);
-        graph.E++;
-    }
-    File.close();
-
-    cout << "total edge (directed) " << graph.E << endl; 
-    }else{
-        cout << "cannot open file" << endl;
-		
-    }
-
-    graph.V = v;
-    graph.adjList.resize(v);
-    graph.adjListInv.resize(v);
-    // convert to graph structure
-	int i = 0;
-    for (i = 0;i<graph.E;i++){
-        graph.adjList[graph.edges[i].src].push_back(graph.edges[i].dest);
-        graph.adjListInv[graph.edges[i].dest].push_back(graph.edges[i].src);
-	}
-
-    cout << "total vertex (directed) " << graph.V << endl; 
-};
