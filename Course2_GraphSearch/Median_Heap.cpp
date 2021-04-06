@@ -38,7 +38,6 @@ int main(int argc, char *argv[]){
     }
 	string Name = path + filename; // absolute path
 
-    //vector<int> numbers{ 9,8,7,6,5,4,3,2,1,0};
     vector<int> numbers;
     loadtxtarray(Name,numbers);
 
